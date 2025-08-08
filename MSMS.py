@@ -9,14 +9,15 @@ class Student:
         # TODO: Initialize an empty list called 'enrolled_in' to store instrument names.
         self.enroll_in = []
 
+
 class Teacher:
     """A blueprint for teacher objects."""
-    def __init__(self, teacher_id, name, speciality):
+    def __init__(self, teacher_id, name):
         # TODO: Assign all three parameters (teacher_id, name, speciality)
         # to instance variables (e.g., self.id = teacher_id).
         self.id = teacher_id
         self.name = name
-        self.speciality = speciality
+        self.speciality = None
         self.teaching = []
 
 class Course:
@@ -54,7 +55,9 @@ def add_teacher(name, speciality):
     """Creates a Teacher object and adds it to the database."""
     global next_teacher_id
     # TODO: Create a new Teacher object using the next available ID.
-    new_teacher = Teacher(next_teacher_id, name, speciality)
+    new_teacher = Teacher(next_teacher_id, name)
+    # TODO: Set speciality to teacher
+    new_teacher.speciality = speciality
     # TODO: Append the new_teacher to the teacher_db list.
     teacher_db.append(new_teacher)
     # TODO: Increment the next_teacher_id counter.
@@ -127,5 +130,43 @@ def find_teachers(info):
         for teacher in teacher_list:
             print(f" ID: {teacher.id}, Name: {teacher.name}, speciality: {teacher.speciality}")
     # for the term in BOTH the teacher's name AND their speciality.
+
+def find_student_by_id(student_id):
+    """A new helper to find one student by their exact ID."""
+    # TODO: Loop through student_db. If a student's ID matches student_id, return the student object.
+    for student in student_db:
+        if student.id == student_id:
+            return student
+    # TODO: If the loop finishes without finding a match, return None.
+    return None
+
+def front_desk_register(name, instrument):
+    """High-level function to register a new student and enrol them."""
+    global next_student_id
+    # TODO: Create a new Student object, add it to student_db, and increment the ID.
+    new_student = Student(next_student_id, name)
+    student_db.append(new_student)
+    next_student_id += 1
+    # TODO: Immediately call front_desk_enrol() using the new student's ID and the provided instrument.
+    front_desk_enrol(new_student.id, instrument)
+    print(f"Front Desk: Successfully registered '{name}' and enrolled them in '{instrument}'.")
+
+def front_desk_enrol(student_id, instrument):
+    """High-level function to enrol an existing student in a course."""
+    # TODO: Use your new find_student_by_id() helper.
+    student = find_student_by_id(student_id)
+    # TODO: If the student is found, append the instrument to their 'enrolled_in' list.
+    if student:
+        student.enroll_in.append(instrument)
+        print(f"Front Desk: Enrolled student '{student_id}' in '{instrument}'.")
+    else:
+        # TODO: If the student is not found, print an error message like "Error: Student ID not found."
+        print(f"Error: Student ID '{student_id}' not found.")
+
+def front_desk_lookup(term):
+    """High-level function to search everything."""
+    print(f"\n--- Performing lookup for '{term}' ---")
+    find_students(term)
+    find_teachers(term)
 
 
